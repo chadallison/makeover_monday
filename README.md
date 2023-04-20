@@ -29,6 +29,7 @@ library(vip)
 
 theme_custom = theme_avatar() +
   theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5, size = 9, vjust = 2.5, face = "italic"),
         panel.grid.major = element_line(linewidth = 0.5, colour = "#D6D0C4"),
         panel.grid.minor = element_line(linewidth = 0.5, colour = "#D6D0C4"))
 
@@ -156,6 +157,56 @@ boxplots / vip_plot
 
 ------------------------------------------------------------------------
 
+### 2023 Week 16: Retirement Ages Around the World
+
+*At what age do people retire around the world?*
+
+**This one is still in progress!**
+
+``` r
+df = clean_names(read_excel("data/market_exit_age.xlsx")) |>
+  mutate(country = ifelse(country == "China (People's Republic of)", "China", country))
+
+top_countries = df |>
+  group_by(country, gender) |>
+  summarise(age = round(mean(average_age), 3),
+            .groups = "drop") |>
+  pivot_wider(id_cols = country, names_from = "gender", values_from = "age") |>
+  mutate(diff = men - women) |>
+  filter(country != "European Union (27 countries)") |>
+  slice_max(diff, n = 10) |>
+  pull(country)
+
+bottom_countries = df |>
+  group_by(country, gender) |>
+  summarise(age = round(mean(average_age), 3),
+            .groups = "drop") |>
+  pivot_wider(id_cols = country, names_from = "gender", values_from = "age") |>
+  mutate(diff = men - women) |>
+  filter(country != "European Union (27 countries)") |>
+  slice_min(diff, n = 10) |>
+  pull(country)
+
+df |>
+  group_by(country, gender) |>
+  summarise(age = round(mean(average_age), 3),
+            .groups = "drop") |>
+  pivot_wider(id_cols = country, names_from = "gender", values_from = "age") |>
+  mutate(diff = men - women) |>
+  filter(country %in% c(top_countries, bottom_countries)) |>
+  ggplot(aes(reorder(country, diff), diff)) +
+  geom_col(aes(fill = diff), show.legend = F) +
+  geom_text(aes(label = round(diff, 3)), size = 3, hjust = -0.25) +
+  coord_flip() +
+  scale_fill_gradient(low = "#AC92B7", high = "#5A8555") +
+  geom_vline(xintercept = 10.5, linetype = "dashed", alpha = 0.5) +
+  labs(x = NULL, y = "Difference in Retirement Age (Men - Women)",
+       title = "Differences in Retirement Ages by Gender",
+       subtitle = "Only countries with ten largest or smallest differences included")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
 ### Script Runtime
 
-    ## 4.23 sec elapsed
+    ## 5.12 sec elapsed
