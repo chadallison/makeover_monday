@@ -11,6 +11,8 @@ Monday](https://data.world/makeovermonday) series.
 - [Importing Required Packages](#importing-required-packages)
 - [2023 Week 14: Chicago Hate Crimes](#week-14-chicago-hate-crimes)
 - [2023 Week 15: The DougScore](#week-15-the-dougscore)
+- [2023 Week 16: Retirement Ages Around the
+  World](#week-16-retirement-ages-around-the-world)
 - [Script Runtime](#script-runtime)
 
 ### Importing Required Packages
@@ -161,7 +163,10 @@ boxplots / vip_plot
 
 *At what age do people retire around the world?*
 
-**This one is still in progress!**
+<details>
+<summary>
+View Code
+</summary>
 
 ``` r
 df = clean_names(read_excel("data/market_exit_age.xlsx")) |>
@@ -194,19 +199,26 @@ df |>
   pivot_wider(id_cols = country, names_from = "gender", values_from = "age") |>
   mutate(diff = men - women) |>
   filter(country %in% c(top_countries, bottom_countries)) |>
+  mutate(pos_lab = ifelse(diff > 0, round(diff, 3), ""),
+         neg_lab = ifelse(diff < 0, round(diff, 3), "")) |>
   ggplot(aes(reorder(country, diff), diff)) +
   geom_col(aes(fill = diff), show.legend = F) +
-  geom_text(aes(label = round(diff, 3)), size = 3, hjust = -0.25) +
-  coord_flip() +
+  geom_text(aes(label = pos_lab), size = 3, hjust = -0.25) +
+  geom_text(aes(label = neg_lab), size = 3, hjust = 1.25) +
+  annotate("text", x = 10, y = 9.5, label = "Dashed line indicates break between top/bottom ten", size = 3, alpha = 0.5) +
+  coord_flip(ylim = c(-1, 12)) +
   scale_fill_gradient(low = "#AC92B7", high = "#5A8555") +
   geom_vline(xintercept = 10.5, linetype = "dashed", alpha = 0.5) +
   labs(x = NULL, y = "Difference in Retirement Age (Men - Women)",
        title = "Differences in Retirement Ages by Gender",
-       subtitle = "Only countries with ten largest or smallest differences included")
+       subtitle = "Only countries with ten largest or smallest differences included") +
+  theme(axis.text.x = element_blank())
 ```
+
+</details>
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ### Script Runtime
 
-    ## 5.12 sec elapsed
+    ## 4.57 sec elapsed
