@@ -14,6 +14,7 @@ ___
 - [2023 Week 14: Chicago Hate Crimes]
 - [2023 Week 15: The DougScore]
 - [2023 Week 16: Retirement Ages Around the World]
+- [2023 Week 17: Biggest Tomato & Potato Producers]
 - [Script Runtime]
 
 ### Importing Required Packages
@@ -54,6 +55,7 @@ theme_custom = theme_avatar() +
 
 theme_set(theme_custom)
 custom_olive = "#8C9F88"
+options(scipen = 999)
 ```
 
 ### 2023 Week 14: Chicago Hate Crimes
@@ -221,7 +223,35 @@ df |>
 rm(df, top_countries, bottom_countries)
 ```
 
+___
 
+### 2023 Week 17: Biggest Tomato & Potato Producers
+
+*Production of tomatoes and potatoes by country*
+
+```{r fold_code = T}
+df = clean_names(read_csv("data/tomato_production.csv", col_types = cols()))
+
+df |>
+  group_by(item, year, element) |>
+  summarise(value = sum(value),
+            .groups = "drop") |>
+  ggplot(aes(year, value)) +
+  geom_line(aes(col = element), linewidth = 2) +
+  facet_wrap(vars(item), strip.position = "bottom", nrow = 2) +
+  labs(x = NULL, y = "Value", col = NULL,
+       title =  "Production of Potatoes and Tomatoes, 1961 to 2021",
+       subtitle = "While area harvested has stayed roughly the same, production has increased over time") +
+  theme(legend.position = "right") +
+  scale_y_continuous(labels = comma) +
+  scale_color_manual(values = c("springgreen4", "lightgoldenrod3", "plum3"))
+```
+
+```{r include = F}
+rm(df)
+```
+
+___
 
 
 
