@@ -257,6 +257,35 @@ df |>
 
 ------------------------------------------------------------------------
 
+### 2023 Week 18: Federal Minimum Wage by State
+
+``` r
+df2015 = read_excel("data/min_wage_state.xlsx", sheet = 7) |> mutate(year = 2015)
+df2016 = read_excel("data/min_wage_state.xlsx", sheet = 6) |> mutate(year = 2016)
+df2017 = read_excel("data/min_wage_state.xlsx", sheet = 5) |> mutate(year = 2017)
+df2018 = read_excel("data/min_wage_state.xlsx", sheet = 4) |> mutate(year = 2018)
+df2019 = read_excel("data/min_wage_state.xlsx", sheet = 3) |> mutate(year = 2019)
+df2020 = read_excel("data/min_wage_state.xlsx", sheet = 2) |> mutate(year = 2020)
+df2021 = read_excel("data/min_wage_state.xlsx", sheet = 1) |> mutate(year = 2021)
+df = clean_names(bind_rows(df2021, df2020, df2019, df2018, df2017, df2016, df2015))
+df
+```
+
+    ## # A tibble: 357 × 5
+    ##    state                total at_minimum_wage below_minimum_wage  year
+    ##    <chr>                <dbl>           <dbl>              <dbl> <dbl>
+    ##  1 Alabama                1.8             0.5                1.3  2021
+    ##  2 Alaska                 0.6             0                  0.6  2021
+    ##  3 Arizona                0.4             0                  0.4  2021
+    ##  4 Arkansas               0.6             0.2                0.4  2021
+    ##  5 California             0.5             0.1                0.4  2021
+    ##  6 Colorado               0.4             0                  0.4  2021
+    ##  7 Connecticut            0.5             0                  0.5  2021
+    ##  8 Delaware               2.4             0.3                2.1  2021
+    ##  9 District of Columbia   2.5             0.6                2    2021
+    ## 10 Florida                2.3             0.1                2.2  2021
+    ## # ℹ 347 more rows
+
 ### Script Runtime
 
-    ## 5.81 sec elapsed
+    ## 10.288 sec elapsed

@@ -253,6 +253,19 @@ rm(df)
 
 ___
 
+### 2023 Week 18: Federal Minimum Wage by State
+
+```{r}
+df2015 = read_excel("data/min_wage_state.xlsx", sheet = 7) |> mutate(year = 2015)
+df2016 = read_excel("data/min_wage_state.xlsx", sheet = 6) |> mutate(year = 2016)
+df2017 = read_excel("data/min_wage_state.xlsx", sheet = 5) |> mutate(year = 2017)
+df2018 = read_excel("data/min_wage_state.xlsx", sheet = 4) |> mutate(year = 2018)
+df2019 = read_excel("data/min_wage_state.xlsx", sheet = 3) |> mutate(year = 2019)
+df2020 = read_excel("data/min_wage_state.xlsx", sheet = 2) |> mutate(year = 2020)
+df2021 = read_excel("data/min_wage_state.xlsx", sheet = 1) |> mutate(year = 2021)
+df = clean_names(bind_rows(df2021, df2020, df2019, df2018, df2017, df2016, df2015))
+df
+```
 
 
 
