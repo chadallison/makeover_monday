@@ -9,12 +9,15 @@ Monday](https://data.world/makeovermonday) series.
 # Contents
 
 - [Importing Required Packages](#importing-required-packages)
-- [2023 Week 14: Chicago Hate Crimes](#week-14-chicago-hate-crimes)
-- [2023 Week 15: The DougScore](#week-15-the-dougscore)
-- [2023 Week 16: Retirement Ages Around the
-  World](#week-16-retirement-ages-around-the-world)
-- [2023 Week 17: Biggest Tomato & Potato
-  Producers](#week-17-biggest-tomato-potato-producers)
+- [Week 14, 2023: Chicago Hate
+  Crimes](#week-14-2023-chicago-hate-crimes)
+- [Week 15, 2023: The DougScore](#week-15-2023-the-dougscore)
+- [Week 16, 2023: Retirement Ages Around the
+  World](#week-16-2023-retirement-ages-around-the-world)
+- [Week 17, 2023: Biggest Tomato & Potato
+  Producers](#week-17-2023-biggest-tomato-potato-producers)
+- [Week 18, 2023: Federal Minimum Wage by
+  State](#week-18-2023-federal-minimum-wage-by-state)
 - [Script Runtime](#script-runtime)
 
 ### Importing Required Packages
@@ -42,7 +45,7 @@ custom_olive = "#8C9F88"
 options(scipen = 999)
 ```
 
-### 2023 Week 14: Chicago Hate Crimes
+### Week 14, 2023: Chicago Hate Crimes
 
 *Data about hate crimes in Chicago from the Chicago Police Department*
 
@@ -91,7 +94,7 @@ df2 |>
 
 ------------------------------------------------------------------------
 
-### 2023 Week 15: The DougScore
+### Week 15, 2023: The DougScore
 
 *Which cars are the best cars ever driven by Doug Demuro?*
 
@@ -162,7 +165,7 @@ boxplots / vip_plot
 
 ------------------------------------------------------------------------
 
-### 2023 Week 16: Retirement Ages Around the World
+### Week 16, 2023: Retirement Ages Around the World
 
 *At what age do people retire around the world?*
 
@@ -224,7 +227,7 @@ df |>
 
 ------------------------------------------------------------------------
 
-### 2023 Week 17: Biggest Tomato & Potato Producers
+### Week 17, 2023: Biggest Tomato & Potato Producers
 
 *Production of tomatoes and potatoes by country*
 
@@ -257,7 +260,14 @@ df |>
 
 ------------------------------------------------------------------------
 
-### 2023 Week 18: Federal Minimum Wage by State
+### Week 18, 2023: Federal Minimum Wage by State
+
+*How many people earned the federal minimum wage or less in each state?*
+
+<details>
+<summary>
+View Code
+</summary>
 
 ``` r
 df2015 = read_excel("data/min_wage_state.xlsx", sheet = 7) |> mutate(year = 2015)
@@ -268,24 +278,34 @@ df2019 = read_excel("data/min_wage_state.xlsx", sheet = 3) |> mutate(year = 2019
 df2020 = read_excel("data/min_wage_state.xlsx", sheet = 2) |> mutate(year = 2020)
 df2021 = read_excel("data/min_wage_state.xlsx", sheet = 1) |> mutate(year = 2021)
 df = clean_names(bind_rows(df2021, df2020, df2019, df2018, df2017, df2016, df2015))
-df
+
+df |>
+  group_by(year) |>
+  summarise(mean_total = round(mean(total), 2),
+            mean_at = round(mean(at_minimum_wage), 2),
+            mean_below = round(mean(below_minimum_wage), 2)) |>
+  pivot_longer(!year, names_to = "metric", values_to = "value") |>
+  mutate(metric = case_when(metric == "mean_total" ~ "Total",
+                            metric == "mean_at" ~ "At Minimum Wage",
+                            metric == "mean_below" ~ "Below Minimum Wage"),
+         metric = factor(metric, levels = c("Total", "At Minimum Wage", "Below Minimum Wage"))) |>
+  ggplot(aes(year, value)) +
+  geom_point(aes(col = metric), size = 3) +
+  geom_line(aes(col = metric), linewidth = 2) +
+  scale_x_continuous(labels = 2015:2021, breaks = 2015:2021) +
+  scale_y_continuous(labels = paste0(seq(0, by = 0.5, to = 3), "%"), breaks = seq(0, by = 0.5, to = 3)) +
+  scale_color_manual(values = c("#D4B8E3", "#A1B8DE", "#8DAD91")) +
+  labs(x = NULL, y = "Percent of Population", col = NULL,
+       title = "Percent of Population at or Below Minimum Wage, 2015 to 2021") +
+  theme(legend.position = "bottom")
 ```
 
-    ## # A tibble: 357 × 5
-    ##    state                total at_minimum_wage below_minimum_wage  year
-    ##    <chr>                <dbl>           <dbl>              <dbl> <dbl>
-    ##  1 Alabama                1.8             0.5                1.3  2021
-    ##  2 Alaska                 0.6             0                  0.6  2021
-    ##  3 Arizona                0.4             0                  0.4  2021
-    ##  4 Arkansas               0.6             0.2                0.4  2021
-    ##  5 California             0.5             0.1                0.4  2021
-    ##  6 Colorado               0.4             0                  0.4  2021
-    ##  7 Connecticut            0.5             0                  0.5  2021
-    ##  8 Delaware               2.4             0.3                2.1  2021
-    ##  9 District of Columbia   2.5             0.6                2    2021
-    ## 10 Florida                2.3             0.1                2.2  2021
-    ## # ℹ 347 more rows
+</details>
+
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+------------------------------------------------------------------------
 
 ### Script Runtime
 
-    ## 10.288 sec elapsed
+    ## 6.903 sec elapsed

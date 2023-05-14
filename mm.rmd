@@ -11,10 +11,11 @@ ___
 # Contents
 
 - [Importing Required Packages]
-- [2023 Week 14: Chicago Hate Crimes]
-- [2023 Week 15: The DougScore]
-- [2023 Week 16: Retirement Ages Around the World]
-- [2023 Week 17: Biggest Tomato & Potato Producers]
+- [Week 14, 2023: Chicago Hate Crimes]
+- [Week 15, 2023: The DougScore]
+- [Week 16, 2023: Retirement Ages Around the World]
+- [Week 17, 2023: Biggest Tomato & Potato Producers]
+- [Week 18, 2023: Federal Minimum Wage by State]
 - [Script Runtime]
 
 ### Importing Required Packages
@@ -58,7 +59,7 @@ custom_olive = "#8C9F88"
 options(scipen = 999)
 ```
 
-### 2023 Week 14: Chicago Hate Crimes
+### Week 14, 2023: Chicago Hate Crimes
 
 *Data about hate crimes in Chicago from the Chicago Police Department*
 
@@ -102,7 +103,7 @@ rm(df, df2, five_digit_dates, digits_21_dates, digits_22_dates)
 
 ___
 
-### 2023 Week 15: The DougScore
+### Week 15, 2023: The DougScore
 
 *Which cars are the best cars ever driven by Doug Demuro?*
 
@@ -168,7 +169,7 @@ rm(df, makes_df, cars_rec, tune_spec, tune_wf, boxplots, vip_plot)
 
 ___
 
-### 2023 Week 16: Retirement Ages Around the World
+### Week 16, 2023: Retirement Ages Around the World
 
 *At what age do people retire around the world?*
 
@@ -225,7 +226,7 @@ rm(df, top_countries, bottom_countries)
 
 ___
 
-### 2023 Week 17: Biggest Tomato & Potato Producers
+### Week 17, 2023: Biggest Tomato & Potato Producers
 
 *Production of tomatoes and potatoes by country*
 
@@ -253,9 +254,11 @@ rm(df)
 
 ___
 
-### 2023 Week 18: Federal Minimum Wage by State
+### Week 18, 2023: Federal Minimum Wage by State
 
-```{r}
+*How many people earned the federal minimum wage or less in each state?*
+
+```{r fold_code = T}
 df2015 = read_excel("data/min_wage_state.xlsx", sheet = 7) |> mutate(year = 2015)
 df2016 = read_excel("data/min_wage_state.xlsx", sheet = 6) |> mutate(year = 2016)
 df2017 = read_excel("data/min_wage_state.xlsx", sheet = 5) |> mutate(year = 2017)
@@ -264,21 +267,33 @@ df2019 = read_excel("data/min_wage_state.xlsx", sheet = 3) |> mutate(year = 2019
 df2020 = read_excel("data/min_wage_state.xlsx", sheet = 2) |> mutate(year = 2020)
 df2021 = read_excel("data/min_wage_state.xlsx", sheet = 1) |> mutate(year = 2021)
 df = clean_names(bind_rows(df2021, df2020, df2019, df2018, df2017, df2016, df2015))
-df
+
+df |>
+  group_by(year) |>
+  summarise(mean_total = round(mean(total), 2),
+            mean_at = round(mean(at_minimum_wage), 2),
+            mean_below = round(mean(below_minimum_wage), 2)) |>
+  pivot_longer(!year, names_to = "metric", values_to = "value") |>
+  mutate(metric = case_when(metric == "mean_total" ~ "Total",
+                            metric == "mean_at" ~ "At Minimum Wage",
+                            metric == "mean_below" ~ "Below Minimum Wage"),
+         metric = factor(metric, levels = c("Total", "At Minimum Wage", "Below Minimum Wage"))) |>
+  ggplot(aes(year, value)) +
+  geom_point(aes(col = metric), size = 3) +
+  geom_line(aes(col = metric), linewidth = 2) +
+  scale_x_continuous(labels = 2015:2021, breaks = 2015:2021) +
+  scale_y_continuous(labels = paste0(seq(0, by = 0.5, to = 3), "%"), breaks = seq(0, by = 0.5, to = 3)) +
+  scale_color_manual(values = c("#D4B8E3", "#A1B8DE", "#8DAD91")) +
+  labs(x = NULL, y = "Percent of Population", col = NULL,
+       title = "Percent of Population at or Below Minimum Wage, 2015 to 2021") +
+  theme(legend.position = "bottom")
 ```
 
+```{r include = F}
+rm(df2015, df2016, df2017, df2018, df2019, df2020, df2021, df)
+```
 
-
-
-
-
-
-
-
-
-
-
-
+___
 
 ### Script Runtime
 
