@@ -295,6 +295,32 @@ rm(df2015, df2016, df2017, df2018, df2019, df2020, df2021, df)
 
 ___
 
+### Week 19, 2023: Makeover Monday Metadata Analysis
+
+```{r fold_code = T}
+df = clean_names(read_excel("data/mm_metadata.xlsx"))
+glimpse(df)
+```
+
+```{r include = F}
+rm(df)
+```
+
+___
+
+### Week x, 2023: xxx
+
+```{r fold_code = T}
+df = clean_names(read_excel("data/press_freedom_index.xlsx"))
+glimpse(df)
+```
+
+```{r include = F}
+rm(df)
+```
+
+___
+
 ### Script Runtime
 
 ```{r echo = F}

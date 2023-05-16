@@ -306,6 +306,59 @@ df |>
 
 ------------------------------------------------------------------------
 
+### Week 19, 2023: Makeover Monday Metadata Analysis
+
+<details>
+<summary>
+View Code
+</summary>
+
+``` r
+df = clean_names(read_excel("data/mm_metadata.xlsx"))
+glimpse(df)
+```
+
+</details>
+
+    ## Rows: 336
+    ## Columns: 9
+    ## $ week         <chr> "2016/w1", "2016/w2", "2016/w3", "2016/w4", "2016/w5", "2…
+    ## $ title        <chr> "Bryce Harper Should Have Made $73 Million More", "The NB…
+    ## $ size_kb      <dbl> 12, 121, 1, 3, 1, 2048, 1, 1, 1, 29, 22, 528, 1, 4, 3, 2,…
+    ## $ rows         <dbl> 30, 666, 18, 49, 15, 3323, 16, 9, 10, 385, 671, 5595, 27,…
+    ## $ columns      <dbl> 7, 24, 3, 4, 3, 21, 3, 2, 4, 6, 6, 6, 3, 5, 6, 6, 4, 3, 4…
+    ## $ rows_columns <dbl> 210, 15984, 54, 196, 45, 69783, 48, 18, 40, 2310, 4026, 3…
+    ## $ whos_week    <chr> "Andy", "Eva", "Andy", "Eva", "Andy", "Eva", "Andy", "Eva…
+    ## $ week_number  <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17…
+    ## $ year         <chr> "2016", "2016", "2016", "2016", "2016", "2016", "2016", "…
+
+------------------------------------------------------------------------
+
+### Week x, 2023: xxx
+
+<details>
+<summary>
+View Code
+</summary>
+
+``` r
+df = clean_names(read_excel("data/press_freedom_index.xlsx"))
+glimpse(df)
+```
+
+</details>
+
+    ## Rows: 1,979
+    ## Columns: 6
+    ## $ year    <dbl> 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 20…
+    ## $ iso     <chr> "NOR", "IRL", "DNK", "SWE", "FIN", "NLD", "LTU", "EST", "PRT",…
+    ## $ rank    <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,…
+    ## $ score   <dbl> 95.18, 89.91, 89.48, 88.15, 87.94, 87.00, 86.79, 85.31, 84.60,…
+    ## $ country <chr> "Norway", "Ireland", "Denmark", "Sweden", "Finland", "Netherla…
+    ## $ zone    <chr> "UE Balkans", "UE Balkans", "UE Balkans", "UE Balkans", "UE Ba…
+
+------------------------------------------------------------------------
+
 ### Script Runtime
 
-    ## 6.903 sec elapsed
+    ## 6.28 sec elapsed
