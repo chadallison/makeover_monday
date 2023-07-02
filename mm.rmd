@@ -16,6 +16,7 @@ ___
 - [Week 16, 2023: Retirement Ages Around the World]
 - [Week 17, 2023: Biggest Tomato & Potato Producers]
 - [Week 18, 2023: Federal Minimum Wage by State]
+- [Week 26, 2023: Most Pressured to Drink with Workmates]
 - [Script Runtime]
 
 ### Importing Required Packages
@@ -308,11 +309,21 @@ rm(df)
 
 ___
 
-### Week x, 2023: xxx
+### Week 26, 2023: Most Pressured to Drink with Workmates
 
 ```{r fold_code = T}
-df = clean_names(read_excel("data/press_freedom_index.xlsx"))
-glimpse(df)
+df = read_excel("data/pressure_drink.xlsx")
+
+df |>
+  magrittr::set_colnames(c("rank", "profession", "pct_pressured")) |>
+  ggplot(aes(reorder(profession, pct_pressured), pct_pressured)) +
+  geom_col(aes(fill = pct_pressured), show.legend = F) +
+  geom_text(aes(label = paste0(pct_pressured * 100, "%")), hjust = -0.25) +
+  paletteer::scale_fill_paletteer_c("scico::tokyo") +
+  coord_flip(ylim = c(0, 0.9)) +
+  labs(x = NULL, y = "Percent of Workers Feeling Pressured to Drink with Coworkers",
+       title = "Pressure to Drink with Coworkers by Profession in the UK") +
+  theme(axis.text.x = element_blank())
 ```
 
 ```{r include = F}

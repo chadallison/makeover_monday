@@ -18,6 +18,8 @@ Monday](https://data.world/makeovermonday) series.
   Producers](#week-17-2023-biggest-tomato-potato-producers)
 - [Week 18, 2023: Federal Minimum Wage by
   State](#week-18-2023-federal-minimum-wage-by-state)
+- [Week 26, 2023: Most Pressured to Drink with
+  Workmates](#week-26-2023-most-pressured-to-drink-with-workmates)
 - [Script Runtime](#script-runtime)
 
 ### Importing Required Packages
@@ -334,7 +336,7 @@ glimpse(df)
 
 ------------------------------------------------------------------------
 
-### Week x, 2023: xxx
+### Week 26, 2023: Most Pressured to Drink with Workmates
 
 <details>
 <summary>
@@ -342,23 +344,26 @@ View Code
 </summary>
 
 ``` r
-df = clean_names(read_excel("data/press_freedom_index.xlsx"))
-glimpse(df)
+df = read_excel("data/pressure_drink.xlsx")
+
+df |>
+  magrittr::set_colnames(c("rank", "profession", "pct_pressured")) |>
+  ggplot(aes(reorder(profession, pct_pressured), pct_pressured)) +
+  geom_col(aes(fill = pct_pressured), show.legend = F) +
+  geom_text(aes(label = paste0(pct_pressured * 100, "%")), hjust = -0.25) +
+  paletteer::scale_fill_paletteer_c("scico::tokyo") +
+  coord_flip(ylim = c(0, 0.9)) +
+  labs(x = NULL, y = "Percent of Workers Feeling Pressured to Drink with Coworkers",
+       title = "Pressure to Drink with Coworkers by Profession in the UK") +
+  theme(axis.text.x = element_blank())
 ```
 
 </details>
 
-    ## Rows: 1,979
-    ## Columns: 6
-    ## $ year    <dbl> 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 20…
-    ## $ iso     <chr> "NOR", "IRL", "DNK", "SWE", "FIN", "NLD", "LTU", "EST", "PRT",…
-    ## $ rank    <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,…
-    ## $ score   <dbl> 95.18, 89.91, 89.48, 88.15, 87.94, 87.00, 86.79, 85.31, 84.60,…
-    ## $ country <chr> "Norway", "Ireland", "Denmark", "Sweden", "Finland", "Netherla…
-    ## $ zone    <chr> "UE Balkans", "UE Balkans", "UE Balkans", "UE Balkans", "UE Ba…
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ------------------------------------------------------------------------
 
 ### Script Runtime
 
-    ## 6.28 sec elapsed
+    ## 6.32 sec elapsed
