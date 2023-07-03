@@ -20,6 +20,8 @@ Monday](https://data.world/makeovermonday) series.
   State](#week-18-2023-federal-minimum-wage-by-state)
 - [Week 26, 2023: Most Pressured to Drink with
   Workmates](#week-26-2023-most-pressured-to-drink-with-workmates)
+- [Week 27, 2023: Alcohol Consumption in OECD
+  Countries](#week-27-2023-alcohol-consumption-in-oecd-countries)
 - [Script Runtime](#script-runtime)
 
 ### Importing Required Packages
@@ -364,6 +366,46 @@ df |>
 
 ------------------------------------------------------------------------
 
+### Week 27, 2023: Alcohol Consumption in OECD Countries
+
+<details>
+<summary>
+View Code
+</summary>
+
+``` r
+df = clean_names(read_csv("data/alcohol_consumption.csv", col_types = cols()))
+
+yearly_avg = df |>
+  group_by(time) |>
+  summarise(avg_litres = mean(litres_capita))
+
+final_litres = yearly_avg |> slice_max(time, n = 1) |> pull(avg_litres)
+
+rus_avg = df |>
+  group_by(location) |>
+  summarise(total = sum(litres_capita),
+            avg = mean(litres_capita)) |>
+  slice_max(avg, n = 1) |>
+  pull(avg) |> round(2)
+
+df |>
+  select(location, time, litres_capita) |>
+  left_join(yearly_avg, by = "time") |>
+  ggplot() +
+  geom_line(aes(time, litres_capita, col = location), alpha = 0.5, show.legend = F) +
+  geom_line(aes(time, avg_litres)) +
+  annotate("text", x = 2020, y = final_litres - 0.5, label = "Global Average") +
+  labs(x = NULL, y = "Litres per Capita", title = "Alcohol Consumption in OECD Countries, 1960-2022",
+       subtitle = paste0("Russia has highest average of ", rus_avg, " litres per capita")) +
+  scale_x_continuous(breaks = seq(1960, 2022, by = 4)) +
+  scale_y_continuous(breaks = seq(0, 30, by = 2))
+```
+
+</details>
+
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
 ### Script Runtime
 
-    ## 6.32 sec elapsed
+    ## 6.21 sec elapsed
