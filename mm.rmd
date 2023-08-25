@@ -18,6 +18,7 @@ ___
 - [Week 18, 2023: Federal Minimum Wage by State]
 - [Week 26, 2023: Most Pressured to Drink with Workmates]
 - [Week 27, 2023: Alcohol Consumption in OECD Countries]
+- [Week 33, 2023: Energy Use per Person]
 - [Script Runtime]
 
 ### Importing Required Packages
@@ -367,6 +368,28 @@ df |>
 ```{r include = F}
 rm(df)
 ```
+
+___
+
+### Week 33, 2023: Energy Use per Person
+
+```{r}
+df = read_csv("data/energy_use_person.csv", col_types = cols()) |>
+  clean_names() |>
+  rename(energy_use = primary_energy_consumption_per_capita_k_wh_person)
+
+random_ent = df |>
+  filter(!is.na(code)) |>
+  pull(entity) |>
+  sample(10)
+
+# filtering to non-NA code values gives us only country entities
+df |>
+  filter(!is.na(code) & entity %in% random_ent & year >= 1980) |>
+  ggplot(aes(year, energy_use)) +
+  geom_line(aes(col = entity), show.legend = F)
+```
+
 
 ### Script Runtime
 
